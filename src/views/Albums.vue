@@ -1,14 +1,14 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-layout align-center justify-space-around row fill-height wrap>
       <v-progress-circular
         :size="50"
         color="primary"
         indeterminate
-        v-if="!albums"
+        v-if="albums.length === 0"
       ></v-progress-circular>
-      <v-flex xs6 sm4 md3 lg2 v-for="album in albums" :key="album.id" v-on:click="playSong(album)" @contextmenu="rightClick($event, album)">
-        <MusicCard :name="album.attributes.name" :artwork="album.attributes.artwork" :artist="album.attributes.artistName">
+      <v-flex xs6 sm4 md3 lg2 v-for="album in albums" :key="album.id" @contextmenu="rightClick($event, album)">
+        <MusicCard :name="album.attributes.name" :artwork="album.attributes.artwork" :artist="album.attributes.artistName" :media="album">
         </MusicCard>
       </v-flex>
     </v-layout>
@@ -51,7 +51,9 @@ export default {
   }),
   methods: {
     updateAlbums() {
-      this.$store.dispatch('updateAlbums')
+      if (this.albums.length === 0) {
+        this.$store.dispatch('updateAlbums')
+      }
     },
     playSong(song) {
       this.$store.dispatch('playSong', { song: song });
@@ -72,7 +74,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('updateAlbums');
+    this.updateAlbums();
   },
   components: {
     MusicCard: MusicCard

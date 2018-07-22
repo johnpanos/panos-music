@@ -4,7 +4,7 @@
       <v-icon size="36">skip_previous</v-icon>
     </v-btn>
     <v-btn flat icon @click.stop="onClick">
-      <p size="36" v-html="currentState == 'paused' ? 'play_arrow' : 'pause_arrow'"></p>
+      <v-icon size="36" v-html="currentState == 'paused' ? 'play_arrow' : 'pause_arrow'"></v-icon>
     </v-btn>
     <v-btn flat icon @click.stop="next">
       <v-icon size="36">skip_next</v-icon>

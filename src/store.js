@@ -11,28 +11,53 @@ const musicKit = window.MusicKit;
 
 const store = new Vuex.Store({
   state: {
+    // Player
     currentState: 'paused',
     currentMedia: null,
     progress: null,
-    albums: null,
-    authorized: localStorage.getItem('authorized') == 'true'
+
+    // Media
+    albums: [],
+    songs: [],
+
+    // Other
+    authorized: localStorage.getItem('authorized') == 'true',
+    dark: localStorage.getItem('dark') == 'true'
   },
   mutations: {
     updateAlbums(state, payload) {
       state.albums = payload.albums;
     },
+    updateSongs(state, payload) {
+      state.songs = payload.songs;
+    },
     playSong(state, payload) {
       const song = payload.song;
       console.log(song);
-      music
-        .setQueue({ album: song.id })
-        .then(queue => {
-          console.log(queue);
-          music.play();
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      switch (song.type) {
+        case 'library-songs':
+          music
+            .setQueue({ items: [song.attributes.playParams] })
+            .then(queue => {
+              console.log(queue);
+              music.play();
+            })
+            .catch(err => {
+              console.log(err);
+            });
+          break;
+        case 'library-albums':
+          music
+            .setQueue({ album: song.id })
+            .then(queue => {
+              console.log(queue);
+              music.play();
+            })
+            .catch(err => {
+              console.log(err);
+            });
+          break;
+      }
     },
     changeCurrentMedia(state, payload) {
       console.log(payload.currentMedia);
@@ -48,14 +73,19 @@ const store = new Vuex.Store({
     changeState(state, payload) {
       state.currentState = payload.currentState;
     },
+    changeDark(state, payload) {
+      state.dark = payload.dark;
+      localStorage.setItem('dark', payload.dark);
+    },
     authorize(state) {
       state.authorized = true;
       localStorage.setItem('authorized', true);
+      location.reload();
     },
     deauthorize(state) {
       state.authorized = false;
       localStorage.setItem('authorized', false);
-      //location.reload();
+      location.reload();
     },
     updateQueue(state, payload) {
       console.log(payload.items);
@@ -63,7 +93,7 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    updateAlbums(context, payload) {
+    updateAlbums(context) {
       var offset = 0;
       const getAlbums = offset => {
         music.api.library
@@ -84,6 +114,28 @@ const store = new Vuex.Store({
       };
       getAlbums(offset);
     },
+    updateSongs(context) {
+      var offset = 0;
+      const getSongs = offset => {
+        music.api.library
+          .songs(null, { offset: offset, limit: 100 })
+          .then(songs => {
+            console.log(songs);
+            if (!context.state.songs) {
+              context.commit('updateSongs', { songs: songs });
+            } else {
+              context.commit('updateSongs', {
+                songs: context.state.songs.concat(songs)
+              });
+            }
+
+            if (songs.length !== 0) {
+              getSongs(offset + 100);
+            }
+          });
+      };
+      getSongs(offset);
+    },
     playSong(context, payload) {
       console.log(payload);
       context.commit('playSong', payload);
@@ -103,7 +155,6 @@ const store = new Vuex.Store({
         commit('deauthorize');
       });
     },
-
     play() {
       music.play();
     },

@@ -1,6 +1,22 @@
 <template>
-  <v-card class="Card">
-    <img :src="formatArtworkUrl()" class="Image"/>
+  <v-card class="Card" @mouseover="mouseOver" @mouseout="mouseOut" v-on:dblclick="playSong()">
+    <div class="ButtonContainer">
+      <img :src="formatArtworkUrl()" class="Image"/>
+      <transition name="fade">
+        <v-btn
+          v-if="showPlayButton"
+          color="primary"
+          dark
+          small
+          absolute
+          fab
+          class="PlayButton"
+          @click.stop="playSong()"
+        >
+          <v-icon>play_arrow</v-icon>
+        </v-btn>
+      </transition>
+    </div>
     <v-card-title class="Title">
       {{ name }}
     </v-card-title>
@@ -13,12 +29,27 @@ export default {
   props: {
     name: String,
     artist: String,
-    artwork: Object
+    artwork: Object,
+    media: Object
+  },
+  data () {
+    return {
+      showPlayButton: false
+    }
   },
   methods: {
     formatArtworkUrl() {
       return window.MusicKit.formatArtworkURL(this.artwork, 500, 500);
-    }
+    },
+    mouseOver() {
+      this.showPlayButton = true;
+    },
+    mouseOut() {
+      this.showPlayButton = false;
+    },
+    playSong() {
+      this.$store.dispatch('playSong', { song: this.media });
+    },
   }
 }
 </script>
@@ -45,5 +76,18 @@ export default {
 .Subtitle {
   padding-bottom: 10px;
   font-size: 1.0rem;
+}
+.ButtonContainer {
+  position: relative;
+}
+.PlayButton {
+  left: 10px;
+  bottom: 15px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

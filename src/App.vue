@@ -1,26 +1,30 @@
 <template>
-  <v-app>
+  <v-app :dark="dark">
     <v-navigation-drawer
       persistent
       :mini-variant="miniVariant"
       :clipped="clipped"
       v-model="drawer"
       enable-resize-watcher
+      mobile-break-point="800"
       fixed
       app
     >
       <v-list>
-        <router-link tag="v-list-tile"
+        <router-link
+          tag="v-list-tile"
           v-for="(item, i) in items"
           :exact="item.exact"
           :to="item.path"
           :key="i"
-          value="albums"><v-list-tile-action>
-            <v-icon v-html="item.icon"></v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
-          </v-list-tile-content></router-link>
+          active-class="RouteActive">
+            <v-list-tile-action>
+              <v-icon v-html="item.icon"></v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title v-text="item.title"></v-list-tile-title>
+            </v-list-tile-content>
+          </router-link>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
@@ -43,6 +47,23 @@
         </v-flex>
         </v-layout>
       </v-container>
+      <v-menu offset-y offset-x :nudge-width="200" :close-on-content-click="false">
+        <v-btn
+          slot="activator"
+          icon
+        >
+          <v-icon>settings</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile>
+              <v-switch
+                label="Dark Mode"
+                v-model="dark"
+                color="primary"
+              ></v-switch>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-btn flat @click.stop="authButton" color="primary" v-html="authorized ? 'LOGOUT' : 'LOGIN'">
       </v-btn>
     </v-toolbar>
@@ -80,12 +101,27 @@ export default {
       rightDrawer: false
     }
   },
-  computed: mapState({
-    authorized: 'authorized'
-  }),
+  computed: {
+    authorized: {
+      get() {
+        return this.$store.state.authorized;
+      }
+    },
+    dark: {
+      get() {
+        return this.$store.state.dark;
+      },
+      set(boolean) {
+        this.$store.commit('changeDark', { dark: boolean });
+      }
+    }
+  },
   methods: {
     authButton () {
       this.authorized ? this.$store.dispatch('deauthorize') : this.$store.dispatch('authorize');
+    },
+    hasAccepted() {
+      return localStorage.getItem('privacy') == true;
     }
   },
   components: {
@@ -101,6 +137,7 @@ export default {
   padding: 0;
   height: 100%;
 }
-.Controls {
+.RouteActive {
+  color: white
 }
 </style>
