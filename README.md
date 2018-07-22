@@ -20,4 +20,4 @@ npm run build
 npm run lint
 ```
 ### License
-Previous and future versions of this software are held accountable to the GNU General Public License.
+Previous and future versions of this software are licensed under the GNU General Public License.
