@@ -1,5 +1,8 @@
 # panos-music
 
+## Website
+Go to https://johnpanos.github.io/ to view the web-app.
+
 ## Project setup
 ```
 npm install
