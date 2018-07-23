@@ -1,7 +1,7 @@
 <template>
   <v-card class="Card" @mouseover="mouseOver" @mouseout="mouseOut" v-on:dblclick="playSong()">
     <div class="ButtonContainer">
-      <img :src="formatArtworkUrl()" class="Image"/>
+      <img v-lazy="formatArtworkUrl()" class="Image"/>
       <transition name="fade">
         <v-btn
           v-if="showPlayButton"
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     formatArtworkUrl() {
-      return window.MusicKit.formatArtworkURL(this.artwork, 500, 500);
+      return window.MusicKit.formatArtworkURL(this.artwork, 250, 250);
     },
     mouseOver() {
       this.showPlayButton = true;
