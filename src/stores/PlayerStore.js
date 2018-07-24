@@ -15,6 +15,11 @@ export default {
     songs: [],
     queue: [],
 
+    // Snackbar
+
+    snackbarText: '',
+    snackbarShow: false,
+
     // Other
     authorized: localStorage.getItem('authorized') == 'true',
     dark: localStorage.getItem('dark') == 'true'
@@ -28,39 +33,32 @@ export default {
     },
     playSong(state, payload) {
       const song = payload.song;
-      console.log(song);
       switch (song.type) {
         case 'library-songs':
           music
             .setQueue({ items: [song.attributes.playParams] })
             .then(queue => {
-              console.log(queue);
               music.play();
             })
             .catch(err => {
-              console.log(err);
             });
           break;
         case 'library-albums':
           music
             .setQueue({ album: song.id })
             .then(queue => {
-              console.log(queue);
               music.play();
             })
             .catch(err => {
-              console.log(err);
             });
           break;
       }
     },
     changeCurrentMedia(state, payload) {
-      console.log(payload.currentMedia);
       state.currentMedia = payload.currentMedia;
       this.dispatch('player/updateQueue');
     },
     changeProgress(state, payload) {
-      console.log(payload.progress.progress);
       state.progress = payload.progress.progress * 100;
     },
     changeDuration(state, payload) {
@@ -76,6 +74,13 @@ export default {
       state.dark = payload.dark;
       localStorage.setItem('dark', payload.dark);
     },
+    changeSnackbarShow(state, payload) {
+      state.snackbarShow = payload.snackbarShow;
+      console.log(payload);
+    },
+    changeSnackbarText(state, payload) {
+      state.snackbarText = payload.snackbarText;
+    },
     authorize(state) {
       state.authorized = true;
       localStorage.setItem('authorized', true);
@@ -87,7 +92,6 @@ export default {
       location.reload();
     },
     updateQueue(state, payload) {
-      console.log(payload.items);
       state.queue = payload.items;
     }
   },
@@ -119,7 +123,6 @@ export default {
         music.api.library
           .songs(null, { offset: offset, limit: 100 })
           .then(songs => {
-            console.log(songs);
             if (!context.state.songs) {
               context.commit('updateSongs', { songs: songs });
             } else {
@@ -136,7 +139,6 @@ export default {
       getSongs(offset);
     },
     playSong(context, payload) {
-      console.log(payload);
       context.commit('playSong', payload);
     },
     authorize({ commit }) {
@@ -167,48 +169,50 @@ export default {
       music.skipToNextItem();
     },
     updateQueue({ commit }) {
-      console.log('updating queue');
       commit('updateQueue', { items: music.player.queue.items });
     },
     playNext(context, { song }) {
       music
         .playNext({ album: song.id })
         .then(res => {
-          console.log(res);
           this.dispatch('player/updateQueue');
+          this.dispatch('player/changeSnackbarText', { snackbarText: `Added ${song.attributes.name} - ${song.attributes.artistName} to up next`});
+          this.dispatch('player/changeSnackbarShow', { snackbarShow: true });
         })
         .catch(err => {
-          console.log(err);
         });
     },
     playLater(context, { song }) {
       music
         .playLater({ album: song.id })
         .then(res => {
-          console.log(res);
           this.dispatch('player/updateQueue');
+          this.dispatch('player/changeSnackbarText', { snackbarText: `Added ${song.attributes.name} - ${song.attributes.artistName} to play later`});
+          this.dispatch('player/changeSnackbarShow', { snackbarShow: true });
         })
         .catch(err => {
-          console.log(err);
         });
     },
     removeFromQueue(context, { index }) {
       var items = music.player.queue.items;
       items.splice(index, 1);
-      console.log(items);
       if (index > -1) {
         music
           .setQueue({ items: items })
           .then(queue => {
-            console.log(queue);
             this.dispatch('player/updateQueue');
             music.pause();
             music.play();
           })
           .catch(err => {
-            console.log(err);
           });
       }
+    },
+    changeSnackbarShow({ commit }, { snackbarShow }) {
+      commit('changeSnackbarShow', { snackbarShow: snackbarShow });
+    },
+    changeSnackbarText({ commit }, { snackbarText }) {
+      commit('changeSnackbarText', { snackbarText: snackbarText });
     }
   }
 };

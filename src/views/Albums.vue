@@ -66,7 +66,6 @@ export default {
     },
     rightClick(e, album) {
       e.preventDefault();
-      console.log(e);
       this.album = album;
       this.contextX = e.x;
       this.contextY = e.y;

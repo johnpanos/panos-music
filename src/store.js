@@ -26,7 +26,6 @@ music.addEventListener('playbackProgressDidChange', progress => {
 });
 
 music.addEventListener('playbackStateDidChange', state => {
-  console.log(window.MusicKit.PlaybackStates[state.state]);
   store.commit('player/changeState', {
     currentState: window.MusicKit.PlaybackStates[state.state]
   });

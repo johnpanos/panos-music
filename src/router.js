@@ -34,7 +34,6 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
   if (to.path === '/albums' || to.path === '/songs') {
     store.state.player.authorized ? next() : next('/');
   } else {

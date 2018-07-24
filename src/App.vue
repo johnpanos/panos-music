@@ -10,7 +10,7 @@
           This problem is usually found in Firefox on Linux, and can be fixed by using Chrome or another browser
           with supported codecs.
           <br/><br/>
-          <span class="font-weight-medium">Codec:</span> audio/mp4;codecs="mp4a.40.2"
+          <span class="font-weight-medium">Codec:</span><br/><code>audio/mp4;codecs="mp4a.40.2"</code>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -120,12 +120,14 @@
     <v-content>
       <router-view/>
     </v-content>
+    <Snackbar />
   </v-app>
 </template>
 
 <script>
 import Player from './components/Player';
 import Controls from './components/Controls';
+import Snackbar from './components/Snackbar';
 export default {
   name: 'App',
   data () {
@@ -191,11 +193,12 @@ export default {
   },
   components: {
     Player: Player,
-    Controls: Controls
+    Controls: Controls,
+    Snackbar: Snackbar
   },
   created() {
-    const codecTester = document.createElement('codec-tester');
-    this.unsupportedCodec = codecTester.canPlayType('audio/mp4;codecs="mp4a.40.2"') != "";
+    const codecTester = document.createElement('video');
+    this.unsupportedCodec = codecTester.canPlayType('audio/mp4;codecs="mp4a.40.2"') != "probably";
   }
 }
 </script>
