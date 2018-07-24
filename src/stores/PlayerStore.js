@@ -192,7 +192,7 @@ export default {
           console.log(err);
         });
     },
-    removeFromQueue({ index }) {
+    removeFromQueue(context, { index }) {
       var items = music.player.queue.items;
       items.splice(index, 1);
       console.log(items);

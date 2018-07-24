@@ -1,5 +1,23 @@
 <template>
   <v-app :dark="dark">
+    <v-dialog v-model="unsupportedCodec" persistent max-width="450" lazy>
+      <v-card>
+        <v-card-title class="headline">Unsupported Codec</v-card-title>
+        <v-card-text>
+          It appears that your browser does not support the codec required to play Apple Music content.
+          This is not a limitation of Panos Music, but it of MusicKit, which Panos Music is based off of.
+          <br/><br/>
+          This problem is usually found in Firefox on Linux, and can be fixed by using Chrome or another browser
+          with supported codecs.
+          <br/><br/>
+          <span class="font-weight-medium">Codec:</span> audio/mp4;codecs="mp4a.40.2"
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" flat @click.native="unsupportedCodec = false">GOT IT</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-navigation-drawer
       persistent
       :mini-variant="miniVariant"
@@ -136,7 +154,8 @@ export default {
           path: '/songs'
         }
       ],
-      miniVariant: false
+      miniVariant: false,
+      unsupportedCodec: true
     }
   },
   computed: {
@@ -173,6 +192,10 @@ export default {
   components: {
     Player: Player,
     Controls: Controls
+  },
+  created() {
+    const codecTester = document.createElement('codec-tester');
+    this.unsupportedCodec = codecTester.canPlayType('audio/mp4;codecs="mp4a.40.2"') != "";
   }
 }
 </script>
