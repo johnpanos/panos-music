@@ -31,12 +31,12 @@
 import { mapState } from "vuex";
 export default {
   name: "Home",
-  computed: mapState({
+  computed: mapState('player', {
     authorized: 'authorized'
   }),
   methods: {
     login() {
-      this.$store.dispatch('authorize');
+      this.$store.dispatch('player/authorize');
     }
   },
   created() {

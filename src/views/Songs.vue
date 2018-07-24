@@ -32,7 +32,7 @@ export default {
       ],
     }
   },
-  computed: mapState({
+  computed: mapState('player', {
     songs: 'songs'
   }),
   methods: {
@@ -42,12 +42,12 @@ export default {
       return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
     },
     playSong(song) {
-      this.$store.dispatch('playSong', { song: song })
+      this.$store.dispatch('player/playSong', { song: song })
     }
   },
   created() {
     if (this.songs.length === 0) {
-      this.$store.dispatch('updateSongs')
+      this.$store.dispatch('player/updateSongs')
     }
   }
 }

@@ -22,7 +22,7 @@
 import { mapState } from 'vuex';
 export default {
   name: 'Player',
-  computed: mapState({
+  computed: mapState('player', {
     currentState: 'currentState',
     currentMedia: 'currentMedia',
     progress: 'progress'

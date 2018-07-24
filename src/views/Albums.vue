@@ -43,7 +43,7 @@ export default {
       album: null
     }
   },
-  computed: mapState({
+  computed: mapState('player', {
     albums: 'albums',
     progress: 'progress',
     currentState: 'currentState',
@@ -52,17 +52,17 @@ export default {
   methods: {
     updateAlbums() {
       if (this.albums.length === 0) {
-        this.$store.dispatch('updateAlbums')
+        this.$store.dispatch('player/updateAlbums')
       }
     },
     playSong(song) {
-      this.$store.dispatch('playSong', { song: song });
+      this.$store.dispatch('player/playSong', { song: song });
     },
     playNext(song) {
-      this.$store.dispatch('playNext', { song: song })
+      this.$store.dispatch('player/playNext', { song: song })
     },
     playLater(song) {
-      this.$store.dispatch('playLater', { song: song })
+      this.$store.dispatch('player/playLater', { song: song })
     },
     rightClick(e, album) {
       e.preventDefault();

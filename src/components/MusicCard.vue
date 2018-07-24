@@ -48,7 +48,7 @@ export default {
       this.showPlayButton = false;
     },
     playSong() {
-      this.$store.dispatch('playSong', { song: this.media });
+      this.$store.dispatch('player/playSong', { song: this.media });
     },
   }
 }

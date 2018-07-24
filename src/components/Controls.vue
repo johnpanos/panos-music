@@ -19,20 +19,20 @@
 import { mapState } from 'vuex';
 export default {
   name: 'Controls',
-  computed: mapState({
+  computed: mapState('player', {
     currentState: 'currentState',
     currentMedia: 'currentMedia',
     progress: 'progress'
   }),
   methods: {
     onClick () {
-      this.$store.dispatch(this.currentState == "playing" ? "pause" : "play");
+      this.$store.dispatch(this.currentState == "playing" ? "player/pause" : "player/play");
     },
     previous () {
-      this.$store.dispatch("previous");
+      this.$store.dispatch("player/previous");
     },
     next () {
-      this.$store.dispatch("next");
+      this.$store.dispatch("player/next");
     }
   }
 }

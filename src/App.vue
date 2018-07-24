@@ -9,22 +9,25 @@
       mobile-break-point="800"
       fixed
       app
+      width="225"
     >
       <v-list>
-        <router-link
-          tag="v-list-tile"
-          v-for="(item, i) in items"
-          :exact="item.exact"
-          :to="item.path"
-          :key="i"
-          active-class="RouteActive">
-            <v-list-tile-action>
-              <v-icon v-html="item.icon"></v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title v-text="item.title"></v-list-tile-title>
-            </v-list-tile-content>
-          </router-link>
+        <template v-for="(item, i) in items">
+          <router-link
+            tag="v-list-tile"
+            :exact="item.exact"
+            :to="item.path"
+            :key="i"
+            active-class="RouteActive">
+              <v-list-tile-action>
+                <v-icon v-html="item.icon"></v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="item.title"></v-list-tile-title>
+              </v-list-tile-content>
+            </router-link>
+            <v-divider v-if="item.divider" :key="i"></v-divider>
+          </template>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
@@ -37,14 +40,14 @@
       </v-btn>
       <v-container class="Container" fill-height row>
         <v-layout row wrap>
-        <v-flex xs4 md3 lg3>
-          <v-layout fill-height align-center justify-center>
-            <Controls />
-          </v-layout>
-        </v-flex>
-        <v-flex xs2 md6 lg6 fill-height="">
-          <Player />
-        </v-flex>
+          <v-flex xs5 md4>
+            <v-layout fill-height align-center justify-center>
+              <Controls />
+            </v-layout>
+          </v-flex>
+          <v-flex xs7 md8 lg6 fill-height="">
+            <Player />
+          </v-flex>
         </v-layout>
       </v-container>
       <v-menu offset-y offset-x :nudge-width="200" :close-on-content-click="false">
@@ -109,55 +112,62 @@ export default {
   name: 'App',
   data () {
     return {
-      clipped: false,
+      clipped: true,
       drawer: true,
-      fixed: true,
-      items: [{
-        icon: 'album',
-        title: 'Albums',
-        exact: true,
-        path: '/albums'
-      },
-      {
-        icon: 'music_note',
-        title: 'Songs',
-        exact: true,
-        path: '/songs'
-      }],
-      miniVariant: true,
-      right: true,
-      rightDrawer: false
+      fixed: false,
+      items: [
+        {
+          icon: 'explore',
+          title: 'Explore',
+          exact: true,
+          path: '/explore',
+          divider: true
+        },
+        {
+          icon: 'album',
+          title: 'Albums',
+          exact: true,
+          path: '/albums'
+        },
+        {
+          icon: 'music_note',
+          title: 'Songs',
+          exact: true,
+          path: '/songs'
+        }
+      ],
+      miniVariant: false
     }
   },
   computed: {
     authorized: {
       get() {
-        return this.$store.state.authorized;
+        return this.$store.state.player.authorized;
       }
     },
     dark: {
       get() {
-        return this.$store.state.dark;
+        return this.$store.state.player.dark;
       },
       set(boolean) {
-        this.$store.commit('changeDark', { dark: boolean });
+        this.$store.commit('player/changeDark', { dark: boolean });
       }
     },
     queue: {
       get() {
-        return this.$store.state.queue;
+        return this.$store.state.player.queue;
       }
     }
   },
   methods: {
     authButton() {
-      this.authorized ? this.$store.dispatch('deauthorize') : this.$store.dispatch('authorize');
+      this.authorized ? this.$store.dispatch('player/deauthorize') : this.$store.dispatch('player/authorize');
     },
     hasAccepted() {
       return localStorage.getItem('privacy') == true;
     },
     removeFromQueue(index) {
-      this.$store.dispatch('removeFromQueue', { index: index });
+      this.$store.dispatch('player/removeFromQueue', { index: index });
     }
   },
   components: {
@@ -173,7 +183,7 @@ export default {
   padding: 0;
   height: 100%;
 }
-.RouteActive {
-  color: white
+.RouteActive, .RouteActive div i {
+  color: #E8364B
 }
 </style>

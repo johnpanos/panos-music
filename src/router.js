@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Albums from './views/Albums.vue';
 import Songs from './views/Songs.vue';
+import Explore from './views/Explore.vue';
 import store from './store';
 
 Vue.use(Router);
@@ -23,6 +24,11 @@ const router = new Router({
       path: '/songs',
       name: 'songs',
       component: Songs
+    },
+    {
+      path: '/explore',
+      name: 'explore',
+      component: Explore
     }
   ]
 });
@@ -30,7 +36,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log(to);
   if (to.path === '/albums' || to.path === '/songs') {
-    store.state.authorized ? next() : next('/');
+    store.state.player.authorized ? next() : next('/');
   } else {
     next();
   }
