@@ -7,7 +7,6 @@ Vue.use(Vuex);
 
 window.MusicKit.configure(config);
 const music = window.MusicKit.getInstance();
-const musicKit = window.MusicKit;
 
 const store = new Vuex.Store({
   state: {
@@ -15,10 +14,12 @@ const store = new Vuex.Store({
     currentState: 'paused',
     currentMedia: null,
     progress: null,
+    duration: 0,
 
     // Media
     albums: [],
     songs: [],
+    queue: [],
 
     // Other
     authorized: localStorage.getItem('authorized') == 'true',
@@ -62,10 +63,14 @@ const store = new Vuex.Store({
     changeCurrentMedia(state, payload) {
       console.log(payload.currentMedia);
       state.currentMedia = payload.currentMedia;
+      this.dispatch('updateQueue');
     },
     changeProgress(state, payload) {
       console.log(payload.progress.progress);
       state.progress = payload.progress.progress * 100;
+    },
+    changeDuration(state, payload) {
+      state.duration = payload.duration;
     },
     changeAuthorized(state, payload) {
       state.authorized = payload.authorized;
@@ -170,39 +175,55 @@ const store = new Vuex.Store({
     updateQueue({ commit }) {
       commit('updateQueue', { items: music.player.queue.items });
     },
-    playNext({ commit }, payload) {
-      const newSong = window.MusicKit.MediaItem(payload.song);
-      console.log(newSong);
+    playNext({ song }) {
       music
-        .playNext({ album: payload.song.id })
+        .playNext({ album: song.id })
         .then(res => {
           console.log(res);
+          this.dispatch('updateQueue');
         })
         .catch(err => {
           console.log(err);
         });
     },
-    playLater({ commit }, payload) {
-      console.log('Play later');
+    playLater({ song }) {
       music
-        .playLater({ album: payload.song.id })
+        .playLater({ album: song.id })
         .then(res => {
           console.log(res);
+          this.dispatch('updateQueue');
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    removeFromQueue({ index }) {
+      var items = music.player.queue.items;
+      items.splice(index, 1);
+      console.log(items);
+      if (index > -1) {
+        music
+          .setQueue({ items: items })
+          .then(queue => {
+            console.log(queue);
+            this.dispatch('updateQueue');
+            music.pause();
+            music.play();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     }
   }
 });
 
 music.addEventListener('mediaItemDidChange', mediaItem => {
   store.commit('changeCurrentMedia', { currentMedia: mediaItem });
-  store.dispatch('updateQueue');
 });
 
 music.addEventListener('playbackDurationDidChange', duration => {
-  //this.duration = duration.duration;
+  store.commit('changeDuration', { duration: duration });
 });
 
 music.addEventListener('playbackProgressDidChange', progress => {

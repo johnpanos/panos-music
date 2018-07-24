@@ -37,16 +37,45 @@
       </v-btn>
       <v-container class="Container" fill-height row>
         <v-layout row wrap>
-        <v-flex xs3>
+        <v-flex xs4 md3 lg3>
           <v-layout fill-height align-center justify-center>
             <Controls />
           </v-layout>
         </v-flex>
-        <v-flex xs6 fill-height="">
+        <v-flex xs2 md6 lg6 fill-height="">
           <Player />
         </v-flex>
         </v-layout>
       </v-container>
+      <v-menu offset-y offset-x :nudge-width="200" :close-on-content-click="false">
+        <v-btn
+          slot="activator"
+          icon
+        >
+          <v-badge right>
+          <span slot="badge" v-if="queue.length > 0">{{ queue.length }}</span>
+            <v-icon>list</v-icon>
+          </v-badge>
+        </v-btn>
+        <v-list two-line>
+          <template v-for="(song, index) in queue">
+            <v-list-tile :key="index">
+                <v-list-tile-content>
+                  <v-list-tile-title v-html="song.attributes.name"></v-list-tile-title>
+                  <v-list-tile-sub-title v-html="song.attributes.artistName"></v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-btn icon @click.stop="removeFromQueue(index)">
+                    <v-icon>close</v-icon>
+                  </v-btn>
+                </v-list-tile-action>
+            </v-list-tile>
+            <v-divider
+              :key="index"
+            ></v-divider>
+          </template>
+        </v-list>
+      </v-menu>
       <v-menu offset-y offset-x :nudge-width="200" :close-on-content-click="false">
         <v-btn
           slot="activator"
@@ -76,7 +105,6 @@
 <script>
 import Player from './components/Player';
 import Controls from './components/Controls';
-import { mapState } from 'vuex';
 export default {
   name: 'App',
   data () {
@@ -114,14 +142,22 @@ export default {
       set(boolean) {
         this.$store.commit('changeDark', { dark: boolean });
       }
+    },
+    queue: {
+      get() {
+        return this.$store.state.queue;
+      }
     }
   },
   methods: {
-    authButton () {
+    authButton() {
       this.authorized ? this.$store.dispatch('deauthorize') : this.$store.dispatch('authorize');
     },
     hasAccepted() {
       return localStorage.getItem('privacy') == true;
+    },
+    removeFromQueue(index) {
+      this.$store.dispatch('removeFromQueue', { index: index });
     }
   },
   components: {

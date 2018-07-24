@@ -1,13 +1,16 @@
 <template>
   <span>
     <v-btn flat icon @click.stop="previous">
-      <v-icon size="36">skip_previous</v-icon>
+      <v-icon size="32">skip_previous</v-icon>
     </v-btn>
-    <v-btn flat icon @click.stop="onClick">
-      <v-icon size="36" v-html="currentState == 'paused' ? 'play_arrow' : 'pause_arrow'"></v-icon>
+    <v-btn flat icon @click.stop="onClick" v-if="currentState === 'playing' || currentState === 'waiting' || currentState === 'loading'"> 
+      <v-icon size="36">stop</v-icon>
+    </v-btn>
+    <v-btn flat icon @click.stop="onClick" v-if="currentState === 'paused'"> 
+      <v-icon size="36">play_arrow</v-icon>
     </v-btn>
     <v-btn flat icon @click.stop="next">
-      <v-icon size="36">skip_next</v-icon>
+      <v-icon size="32">skip_next</v-icon>
     </v-btn>
   </span>
 </template>
