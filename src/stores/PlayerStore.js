@@ -32,25 +32,26 @@ export default {
       state.songs = payload.songs;
     },
     playSong(state, payload) {
+      console.log(payload);
       const song = payload.song;
       switch (song.type) {
+        case 'songs':
         case 'library-songs':
           music
             .setQueue({ items: [song.attributes.playParams] })
             .then(queue => {
               music.play();
             })
-            .catch(err => {
-            });
+            .catch(err => {});
           break;
+        case 'albums':
         case 'library-albums':
           music
             .setQueue({ album: song.id })
             .then(queue => {
               music.play();
             })
-            .catch(err => {
-            });
+            .catch(err => {});
           break;
       }
     },
@@ -176,22 +177,28 @@ export default {
         .playNext({ album: song.id })
         .then(res => {
           this.dispatch('player/updateQueue');
-          this.dispatch('player/changeSnackbarText', { snackbarText: `Added ${song.attributes.name} - ${song.attributes.artistName} to up next`});
+          this.dispatch('player/changeSnackbarText', {
+            snackbarText: `Added ${song.attributes.name} - ${
+              song.attributes.artistName
+            } to up next`
+          });
           this.dispatch('player/changeSnackbarShow', { snackbarShow: true });
         })
-        .catch(err => {
-        });
+        .catch(err => {});
     },
     playLater(context, { song }) {
       music
         .playLater({ album: song.id })
         .then(res => {
           this.dispatch('player/updateQueue');
-          this.dispatch('player/changeSnackbarText', { snackbarText: `Added ${song.attributes.name} - ${song.attributes.artistName} to play later`});
+          this.dispatch('player/changeSnackbarText', {
+            snackbarText: `Added ${song.attributes.name} - ${
+              song.attributes.artistName
+            } to play later`
+          });
           this.dispatch('player/changeSnackbarShow', { snackbarShow: true });
         })
-        .catch(err => {
-        });
+        .catch(err => {});
     },
     removeFromQueue(context, { index }) {
       var items = music.player.queue.items;
@@ -204,8 +211,7 @@ export default {
             music.pause();
             music.play();
           })
-          .catch(err => {
-          });
+          .catch(err => {});
       }
     },
     changeSnackbarShow({ commit }, { snackbarShow }) {

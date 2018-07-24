@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Albums from './views/Albums.vue';
 import Songs from './views/Songs.vue';
 import Explore from './views/Explore.vue';
+import Search from './views/Search.vue';
 import store from './store';
 
 Vue.use(Router);
@@ -28,7 +29,14 @@ const router = new Router({
     {
       path: '/explore',
       name: 'explore',
-      component: Explore
+      component: Explore,
+      children: [
+        {
+          name: 'search',
+          path: 'search/:searchText',
+          component: Search
+        }
+      ]
     }
   ]
 });

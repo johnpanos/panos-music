@@ -6,10 +6,12 @@ Vue.use(Vuex);
 const music = window.MusicKit.getInstance();
 
 import PlayerStore from './stores/PlayerStore';
+import ExploreStore from './stores/ExploreStore';
 
 const store = new Vuex.Store({
   modules: {
-    player: PlayerStore
+    player: PlayerStore,
+    explore: ExploreStore
   }
 });
 

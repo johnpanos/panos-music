@@ -33,7 +33,6 @@
         <template v-for="(item, i) in items">
           <router-link
             tag="v-list-tile"
-            :exact="item.exact"
             :to="item.path"
             :key="i"
             active-class="RouteActive">
@@ -197,6 +196,7 @@ export default {
     Snackbar: Snackbar
   },
   created() {
+    // Check if it the browser supports the codec required for Apple Music
     const codecTester = document.createElement('video');
     this.unsupportedCodec = codecTester.canPlayType('audio/mp4;codecs="mp4a.40.2"') != "probably";
   }
