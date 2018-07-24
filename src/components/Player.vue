@@ -4,8 +4,12 @@
         <img class="Image" :src="formatArtworkUrl(currentMedia)"/>
         <v-layout align-space-between justify-space-between column fill-height="">
             <v-layout fill-height align-center column>
-              <p v-if="currentMedia" class="Title">{{ currentMedia.item.title }}</p>
-              <p v-if="currentMedia" class="Subtitle">{{ currentMedia.item.artistName}} - {{ currentMedia.item.albumName }}</p>
+              <v-flex xs6 align-center>
+                <p v-if="currentMedia" class="Title">{{ currentMedia.item.title }}</p>
+              </v-flex>
+              <v-flex xs6 align-center justify-center style="text-align:center;">
+                <p v-if="currentMedia" class="Subtitle">{{ currentMedia.item.artistName}} - {{ currentMedia.item.albumName }}</p>
+              </v-flex>
             </v-layout>
             <v-progress-linear
               v-model="progress"
@@ -40,15 +44,20 @@ export default {
   margin: 0;
   padding: 0;
   font-size: 1.5em;
-}
-.Subtitle {
-  margin: 0;
-  font-size: 1.0rem;
-  width: 90%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+}
+.Subtitle {
+  margin: 0;
+  font-size: 1.0rem;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  padding: 0;
 }
 .Player {
   margin: 0;

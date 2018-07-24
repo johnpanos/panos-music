@@ -6,7 +6,7 @@
     <v-btn flat icon @click.stop="onClick" v-if="currentState === 'playing' || currentState === 'waiting' || currentState === 'loading'"> 
       <v-icon size="36">stop</v-icon>
     </v-btn>
-    <v-btn flat icon @click.stop="onClick" v-if="currentState === 'paused'"> 
+    <v-btn flat icon @click.stop="onClick" v-if="currentState === 'paused' || currentState === 'stopped'"> 
       <v-icon size="36">play_arrow</v-icon>
     </v-btn>
     <v-btn flat icon @click.stop="next">
