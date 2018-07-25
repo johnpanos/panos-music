@@ -5,6 +5,7 @@ import Albums from './views/Albums.vue';
 import Songs from './views/Songs.vue';
 import Explore from './views/Explore.vue';
 import Search from './views/Search.vue';
+import Recommendations from './views/Recommendations.vue';
 import store from './store';
 
 Vue.use(Router);
@@ -35,6 +36,11 @@ const router = new Router({
           name: 'search',
           path: 'search/:searchText',
           component: Search
+        },
+        {
+          name: 'recommendations',
+          path: '',
+          component: Recommendations
         }
       ]
     }

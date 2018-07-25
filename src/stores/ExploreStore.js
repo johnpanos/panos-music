@@ -25,6 +25,10 @@ export default {
     },
     updateResults(state, payload) {
       state.search.results = payload.results;
+    },
+    updateRecommendations(state, payload) {
+      console.log('update');
+      state.recommendations = payload.recommendations;
     }
   },
   actions: {
@@ -46,6 +50,14 @@ export default {
       music.api.search(query, { limit: 10 }).then(searchResults => {
         console.log(searchResults);
         context.commit('updateResults', { results: searchResults });
+      });
+    },
+    updateRecommendations(context) {
+      music.api.recommendations().then(recommendations => {
+        console.log(recommendations);
+        context.commit('updateRecommendations', {
+          recommendations: recommendations
+        });
       });
     }
   }

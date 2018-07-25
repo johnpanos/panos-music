@@ -1,17 +1,19 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="songs"
-    hide-actions
-    class="elevation-1"
-  >
-    <template slot="items" slot-scope="props">
-      <td @click.stop="playSong(props.item)">{{ props.item.attributes.name }}</td>
-      <td class="text-xs-left">{{ millisToMinutesAndSeconds(props.item.attributes.durationInMillis) }}</td>
-      <td class="text-xs-left">{{ props.item.attributes.artistName }}</td>
-      <td class="text-xs-left">{{ props.item.attributes.albumName }}</td>
-    </template>
-  </v-data-table>
+  <v-slide-y-transition appear>
+    <v-data-table
+      :headers="headers"
+      :items="songs"
+      hide-actions
+      class="elevation-1"
+    >
+      <template slot="items" slot-scope="props">
+        <td @click.stop="playSong(props.item)">{{ props.item.attributes.name }}</td>
+        <td class="text-xs-left">{{ millisToMinutesAndSeconds(props.item.attributes.durationInMillis) }}</td>
+        <td class="text-xs-left">{{ props.item.attributes.artistName }}</td>
+        <td class="text-xs-left">{{ props.item.attributes.albumName }}</td>
+      </template>
+    </v-data-table>
+  </v-slide-y-transition>
 </template>
 
 <script>

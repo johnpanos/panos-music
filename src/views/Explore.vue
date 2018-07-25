@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <v-slide-y-transition appear>
+      <div>
     <v-toolbar>
       <v-autocomplete
         v-model="select"
@@ -18,11 +19,12 @@
       >
       </v-autocomplete>
     </v-toolbar>
-    <v-container fluid>
+    <v-container fluid fill-height>
     <!-- <p class="display-1">Recommendations</p> -->
       <router-view></router-view>
     </v-container>
-  </div>
+    </div>=
+  </v-slide-y-transition>
 </template>
 
 <script>
@@ -51,12 +53,8 @@ export default {
     }
   },
   computed: mapState('explore', {
-    recommendations: 'recommendations',
     searchHints: 'searchHints',
     loading: 'loading'
-  }),
-  created() {
-    this.$store.dispatch('explore/updateRecommendations');
-  }
+  })
 }
 </script>

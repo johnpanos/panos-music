@@ -210,6 +210,6 @@ export default {
   height: 100%;
 }
 .RouteActive, .RouteActive div i {
-  color: #E8364B
+  color: #E8364B;
 }
 </style>
